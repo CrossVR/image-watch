@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch"/>
+
+  <Type Name="Eigen::Matrix&lt;*,*,*,*,*,*&gt;">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <!-- Fixed Sized Matrix -->
+  <Type Name="Eigen::Matrix&lt;*,*,*,*,*,*&gt;">
+    <Expand>
+      <Synthetic Name="[type]" Condition='strcmp("int", "$T1") == 0'>
+        <DisplayString>INT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("float", "$T1") == 0'>
+        <DisplayString>FLOAT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("double", "$T1") == 0'>
+        <DisplayString>FLOAT64</DisplayString>
+      </Synthetic>
+
+      <Item Name="[channels]">1</Item>
+      <Item Name="[rows]">$T2</Item>
+      <Item Name="[cols]">$T3</Item>
+
+      <Item Name="[width]">$T3</Item>
+      <Item Name="[height]">$T2</Item>
+
+      <Item Name="[data]">($T1*)(m_storage.m_data.array)</Item>
+
+      <!-- Row stride: RowMajor ($T4 & 1) = cols * sizeof(T), ColMajor = sizeof(T) -->
+      <Item Name="[stride]">($T4 &amp; 1) ? ($T3 * sizeof($T1)) : sizeof($T1)</Item>
+
+      <!-- Column stride: RowMajor = sizeof(T) (contiguous, ignored by IW), ColMajor = rows * sizeof(T) -->
+      <Item Name="[col_stride]">($T4 &amp; 1) ? sizeof($T1) : ($T2 * sizeof($T1))</Item>
+    </Expand>
+  </Type>
+
+  <!-- Dynamic Matrix -->
+  <Type Name="Eigen::Matrix&lt;*,-1,-1,*,*,*&gt;">
+    <Expand>
+      <Synthetic Name="[type]" Condition='strcmp("int", "$T1") == 0'>
+        <DisplayString>INT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("float", "$T1") == 0'>
+        <DisplayString>FLOAT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("double", "$T1") == 0'>
+        <DisplayString>FLOAT64</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("__int64", "$T1") == 0'>
+        <DisplayString>INT64</DisplayString>
+      </Synthetic>
+
+      <Item Name="[channels]">1</Item>
+      <Item Name="[rows]">m_storage.m_rows</Item>
+      <Item Name="[cols]">m_storage.m_cols</Item>
+
+      <Item Name="[width]">m_storage.m_cols</Item>
+      <Item Name="[height]">m_storage.m_rows</Item>
+
+      <Item Name="[data]">(m_storage.m_data)</Item>
+
+      <!-- Row stride: RowMajor = cols * sizeof(T), ColMajor = sizeof(T) -->
+      <!-- $T2 is Options (2nd wildcard in <*,-1,-1,*,*,*>) -->
+      <Item Name="[stride]">($T2 &amp; 1) ? (m_storage.m_cols * sizeof($T1)) : sizeof($T1)</Item>
+
+      <!-- Column stride: RowMajor = sizeof(T) (contiguous, ignored by IW), ColMajor = rows * sizeof(T) -->
+      <Item Name="[col_stride]">($T2 &amp; 1) ? sizeof($T1) : (m_storage.m_rows * sizeof($T1))</Item>
+    </Expand>
+  </Type>
+
+  <!-- Dynamic Column Vector -->
+  <Type Name="Eigen::Matrix&lt;*,-1,1,*,*,*&gt;">
+    <Expand>
+      <Synthetic Name="[type]" Condition='strcmp("int", "$T1") == 0'>
+        <DisplayString>INT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("float", "$T1") == 0'>
+        <DisplayString>FLOAT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("double", "$T1") == 0'>
+        <DisplayString>FLOAT64</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("__int64", "$T1") == 0'>
+        <DisplayString>INT64</DisplayString>
+      </Synthetic>
+
+      <Item Name="[channels]">1</Item>
+      <Item Name="[rows]">m_storage.m_rows</Item>
+      <Item Name="[cols]">1</Item>
+
+      <Item Name="[width]">1</Item>
+      <Item Name="[height]">m_storage.m_rows</Item>
+
+      <Item Name="[data]">(m_storage.m_data)</Item>
+
+      <!-- Column vector: 1 col, so row stride = sizeof(T) regardless of layout -->
+      <Item Name="[stride]">sizeof($T1)</Item>
+    </Expand>
+  </Type>
+
+  <!-- Dynamic Row Vector -->
+  <Type Name="Eigen::Matrix&lt;*,1,-1,*,*,*&gt;">
+    <Expand>
+      <Synthetic Name="[type]" Condition='strcmp("int", "$T1") == 0'>
+        <DisplayString>INT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("float", "$T1") == 0'>
+        <DisplayString>FLOAT32</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("double", "$T1") == 0'>
+        <DisplayString>FLOAT64</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[type]" Condition='strcmp("__int64", "$T1") == 0'>
+        <DisplayString>INT64</DisplayString>
+      </Synthetic>
+
+      <Item Name="[channels]">1</Item>
+      <Item Name="[rows]">1</Item>
+      <Item Name="[cols]">m_storage.m_cols</Item>
+
+      <Item Name="[width]">m_storage.m_cols</Item>
+      <Item Name="[height]">1</Item>
+
+      <Item Name="[data]">(m_storage.m_data)</Item>
+
+      <!-- Row vector: 1 row, so stride = cols * sizeof(T) regardless of layout -->
+      <Item Name="[stride]">m_storage.m_cols*sizeof($T1)</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>

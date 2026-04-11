@@ -19,6 +19,7 @@
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ImageWatch" Path="|ImageWatch;PkgdefProjectOutputGroup|" />
+        <Asset Type="NativeVisualizer" d:Source="File" Path="ImageWatchEigen.natvis" />
         <Asset Type="NativeVisualizer" d:Source="File" Path="ImageWatchOpenCV.natvis" />
         <Asset Type="NativeVisualizer" d:Source="File" Path="ImageWatchWinMedia.natvis" />
         <Asset Type="NativeVisualizer" d:Source="File" Path="ImageWatchWinRT.natvis" />
