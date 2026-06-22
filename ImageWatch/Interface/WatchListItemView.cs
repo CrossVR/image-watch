@@ -359,6 +359,17 @@ namespace Microsoft.ImageWatch.Interface
             flipColorChannels_ = value;
         }
 
+        int colorMapSelectedBand_ = -1;
+        public void SetColormapSelectedBand(int value)
+        {
+            colorMapSelectedBand_ = value;
+        }
+
+        public void SetDefaultColormapSelectedBand()
+        {
+            colorMapSelectedBand_ = -1;
+        }
+
         private void RenderIfDirty()
         {
             if (view_ != null)
@@ -402,7 +413,7 @@ namespace Microsoft.ImageWatch.Interface
                         }
                     }
 
-                    view_.ColorMapSelectedBand = -1;
+                    view_.ColorMapSelectedBand = colorMapSelectedBand_;
 
                     view_.ColorMapDomainStart = colorMapDomainStart_;
                     view_.ColorMapDomainEnd = colorMapDomainEnd_;

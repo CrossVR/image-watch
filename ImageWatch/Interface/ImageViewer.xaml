@@ -11,13 +11,27 @@
     <UserControl.Resources>
         <my:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
         <my:AndConverter x:Key="AndConverter"/>
+        <DataTemplate x:Key="itemTemplate">
+            <TextBlock x:Name="channelText" Text="{Binding StringFormat=Channel {0}}" Foreground="{DynamicResource VsBrush.WindowText}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding}" Value="-1">
+                    <Setter TargetName="channelText"
+                    Property="Text"
+                    Value="All Channels"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid ContextMenuOpening="ContextMenu_Opening" ContextMenuClosing="ContextMenu_Closing">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Name="viewStatus">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Name="viewStatus">
             <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource VsBrush.PanelBorder}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -77,6 +91,14 @@
         </Border>
         <TextBlock Grid.Row="1" Name="bitmapInfo" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"
                    Foreground="Gray" />
+        <ListBox Grid.Row="1" Grid.Column="1" Name="bandsListControl"
+                 ItemTemplate="{StaticResource itemTemplate}" Focusable="False"
+                 ItemsSource="{Binding ValidChannels}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.CanContentScroll="False"
+                 BorderThickness="0"
+                 SelectionChanged="bandsListControl_SelectionChanged"
+                 Background="{DynamicResource VsBrush.Window}"/>
         <Grid.ContextMenu>
             <ContextMenu Name="viewContextMenu">
                 <MenuItem Header="{x:Static resx:Resources.ZoomToFitMenuItem}" Click="ContextMenu_ZoomToFitClick"

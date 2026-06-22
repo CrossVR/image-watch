@@ -572,6 +572,8 @@ namespace Microsoft.ImageWatch.Interface
 
                 ApplyColormap(view_);
 
+                view_.SetColormapSelectedBand(selectedChannel_);
+
                 return view_.Bitmap;
             }
         }
@@ -738,6 +740,35 @@ namespace Microsoft.ImageWatch.Interface
         public void SetFlipColorChannels(bool value)
         {
             flipColorChannels_ = value;
+        }
+
+        private int selectedChannel_ = -1;
+        public int SelectedChannel
+        {
+            get
+            {
+                return selectedChannel_;
+            }
+            set
+            {
+                if (SetProperty(ref selectedChannel_, value))
+                    NotifyAllPropertiesChanged();
+            }
+        }
+
+        public IEnumerable<int> ValidChannels
+        {
+            get
+            {
+                UpdateIfNecessary(1);
+
+                if (image_ == null || !image_.HasValidInfo())
+                    return Enumerable.Empty<int>();
+
+                var info = image_.GetInfo();
+
+                return Enumerable.Range(-1, (int)info.NumBands + 1);
+            }
         }
 
         private void ApplyColormap(WatchListItemView v)

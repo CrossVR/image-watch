@@ -166,8 +166,15 @@ namespace Microsoft.ImageWatch.Interface
             var nullVisibility = parameter != null && (bool)parameter ?
                 Visibility.Hidden : Visibility.Collapsed;
 
-            return string.IsNullOrEmpty((string)value) ? nullVisibility :
-                Visibility.Visible;
+            if (value is string)
+            {
+                return string.IsNullOrEmpty((string)value) ? nullVisibility :
+                    Visibility.Visible;
+            }
+            else
+            {
+                return value == null ? nullVisibility : Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType,
@@ -185,8 +192,15 @@ namespace Microsoft.ImageWatch.Interface
             var notNullVisibility = parameter != null && (bool)parameter ?
                 Visibility.Hidden : Visibility.Collapsed;
 
-            return !string.IsNullOrEmpty((string)value) ? notNullVisibility :
-                Visibility.Visible;
+            if (value is string)
+            {
+                return !string.IsNullOrEmpty((string)value) ? notNullVisibility :
+                    Visibility.Visible;
+            }
+            else
+            {
+                return value != null ? notNullVisibility : Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType,
