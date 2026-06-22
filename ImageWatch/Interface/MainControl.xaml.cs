@@ -40,8 +40,10 @@ namespace Microsoft.ImageWatch.Interface
                 if (controller == null)
                     return;
 
-                (controller.LocalsSelected ? localsListControl : watchListControl)
-                    .SelectLastSelectedItem();
+                WatchList list = (controller.LocalsSelected ? localsListControl : watchListControl);
+                int next = (list.SelectedItems.IndexOf(viewer.DataContext) + 1) % list.SelectedItems.Count;
+                WatchListItem item = list.SelectedItems[next] as WatchListItem;
+                AttachViewerToItem(item);
             }
         }
 
@@ -90,9 +92,16 @@ namespace Microsoft.ImageWatch.Interface
             if (controller == null)
                 return;
 
-            var vi = (controller.LocalsSelected ? 
-                localsListControl: watchListControl).NonNullSelectedItem;
-            
+            AttachViewerToItem((controller.LocalsSelected ? 
+                localsListControl: watchListControl).NonNullSelectedItem);
+        }
+
+        void AttachViewerToItem(WatchListItem vi)
+        {
+            var controller = DataContext as Controller;
+            if (controller == null || vi == null)
+                return;
+
             controller.AttachViewToItem(vi);
 
             viewer.SetItem(vi);

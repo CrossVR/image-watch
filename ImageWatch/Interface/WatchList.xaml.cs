@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -41,21 +42,6 @@ namespace Microsoft.ImageWatch.Interface
 
             if (SelectedItemChanged != null)
                 SelectedItemChanged(this, EventArgs.Empty);
-
-            if (e.RemovedItems != null && listBox.SelectedItems.Count <= 1)
-            {
-                lastSelectedItem_ = e.RemovedItems.Count > 0 ? (e.RemovedItems[0] as WatchListItem) : null;
-
-                if (lastSelectedItem_ == nullItem_)
-                    lastSelectedItem_ = null;
-            }
-        }
-
-        WatchListItem lastSelectedItem_ = null;
-        public void SelectLastSelectedItem()
-        {
-            if (lastSelectedItem_ != null)
-                SelectedItem = lastSelectedItem_;
         }
 
         private bool userCanModify_ = false;
@@ -139,6 +125,14 @@ namespace Microsoft.ImageWatch.Interface
                     return;
 
                 listBox.SelectedItem = value;
+            }
+        }
+
+        public IList SelectedItems
+        {
+            get
+            {
+                return listBox.SelectedItems;
             }
         }
 
