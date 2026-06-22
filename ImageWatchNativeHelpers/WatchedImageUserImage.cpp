@@ -147,6 +147,8 @@ bool Microsoft::ImageWatch::WatchedImageUserImage::TryParseDoubleArray(
 void Microsoft::ImageWatch::WatchedImageUserImage::DoReloadInfo(
 	Microsoft::ImageWatch::WatchedImageInfo^% info)
 {
+	if (InspectionContext == nullptr)
+		return;
 	info = nullptr;
 
 	auto expr = String::Format("({0})0x{1:x}", ObjectPointerType, 
