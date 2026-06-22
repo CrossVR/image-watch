@@ -207,4 +207,7 @@
   <data name="CopyToClipboardMenuItem" xml:space="preserve">
     <value>Copy to clipboard</value>
   </data>
+  <data name="AddOperationToWatchMenuItem" xml:space="preserve">
+    <value>Add Operation to Watch</value>
+  </data>
 </root>

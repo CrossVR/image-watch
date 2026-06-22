@@ -6,6 +6,7 @@
              xmlns:my="clr-namespace:Microsoft.ImageWatch.Interface" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:resx="clr-namespace:Microsoft.ImageWatch"
+             xmlns:local="clr-namespace:Microsoft.ImageWatch"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Focusable="False">
@@ -219,7 +220,8 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <ListBox Name="listBox" ItemTemplate="{StaticResource itemTemplate}" Focusable="False" 
+        <ListBox Name="listBox" ItemTemplate="{StaticResource itemTemplate}"
+                 Focusable="False" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.CanContentScroll="False"                 
                  BorderThickness="0" 
@@ -244,6 +246,10 @@
                     <MenuItem Header="{x:Static resx:Resources.AddAddressToWatchMenuItem}" Click="ContextMenu_AddAddressToWatchClick"
                               DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
                               IsEnabled="{Binding Path=SelectedItem, Converter={StaticResource ValidNonOperatorSelectedItemToBooleanConverter}}"/>
+                    <MenuItem Header="{x:Static resx:Resources.AddOperationToWatchMenuItem}" Click="ContextMenu_AddOperationClick"
+                              DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                              ItemsSource="{x:Static local:WatchedImageTypeMap.Operators}"
+                              IsEnabled="{Binding Path=SelectedItem, Converter={StaticResource ValidSelectedItemToBooleanConverter}}"/>
                     <Separator/>
                     <MenuItem Header="{x:Static resx:Resources.DumpToFileMenuItem}" Click="ContextMenu_DumpImageToFileClick"
                               DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"

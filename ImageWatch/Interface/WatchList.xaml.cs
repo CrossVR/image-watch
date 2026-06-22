@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,7 +42,7 @@ namespace Microsoft.ImageWatch.Interface
             if (SelectedItemChanged != null)
                 SelectedItemChanged(this, EventArgs.Empty);
 
-            if (e.RemovedItems != null)
+            if (e.RemovedItems != null && listBox.SelectedItems.Count <= 1)
             {
                 lastSelectedItem_ = e.RemovedItems.Count > 0 ? (e.RemovedItems[0] as WatchListItem) : null;
 
@@ -563,6 +564,35 @@ namespace Microsoft.ImageWatch.Interface
             var controller = DataContext as Controller;
             if (controller != null && SelectedItem != null)
                 controller.AddAddressToWatchList(SelectedItem.Expression);
+        }
+
+        private void ContextMenu_AddOperationClick(object sender, RoutedEventArgs e)
+        {
+            var controller = DataContext as Controller;
+            var operation = e.OriginalSource as MenuItem;
+            if (controller != null && operation != null && SelectedItem != null)
+            {
+                WatchedImageTypeMap.NamedType type = (WatchedImageTypeMap.NamedType)operation.DataContext;
+                WatchedImageOperator op = Activator.CreateInstance(type.Type) as WatchedImageOperator;
+                if (op != null)
+                {
+                    var image = listBox.SelectedItems.Cast<WatchListItem>().GetEnumerator();
+                    string expression = SelectedItem.Expression;
+                    var args = op.GetArgumentTypes().Select(arg => {
+                        if (arg == typeof(WatchedImage))
+                        {
+                            if (image.MoveNext())
+                                expression = image.Current.Expression;
+                            return expression;
+                        }
+                        else
+                        {
+                            return Activator.CreateInstance(arg)?.ToString();
+                        }
+                    });
+                    controller.AddToWatchList($"@{type.Name}({string.Join(", ", args)})");
+                }
+            }
         }
 
         private void ContextMenu_UnselectClick(object sender, RoutedEventArgs e)

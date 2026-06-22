@@ -7,22 +7,34 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Collections.ObjectModel;
 
 namespace Microsoft.ImageWatch
 {
     public static class WatchedImageTypeMap
     {
-        private struct NamedType
+        public struct NamedType
         {
             public string Name { get; set; }
             public Type Type { get; set; }
+            public override string ToString() { return Name; }
         }
 
         static Dictionary<string, NamedType> imageTypes_ = new Dictionary<string, NamedType>();
 
+        static ObservableCollection<NamedType> operators_ = new ObservableCollection<NamedType>();
+        public static ObservableCollection<NamedType> Operators
+        {
+            get
+            {
+                return operators_;
+            }
+        }
+
         public static void Initialize(bool enableInternalTypes, bool enableUserTypes)
         {
             imageTypes_.Clear();
+            operators_.Clear();
 
             // internal image types
             if (enableInternalTypes)
@@ -95,7 +107,9 @@ namespace Microsoft.ImageWatch
                 return;
             }
 
-            imageTypes_.Add(key, new NamedType { Name = nakedName, Type = type });
+            NamedType op = new NamedType { Name = nakedName, Type = type };
+            imageTypes_.Add(key, op);
+            operators_.Add(op);
         }
 
         public static Type GetImageType(string typeName, out string originalName)

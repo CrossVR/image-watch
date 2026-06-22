@@ -70,6 +70,15 @@ namespace Microsoft.ImageWatch {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Operation to Watch.
+        /// </summary>
+        public static string AddOperationToWatchMenuItem {
+            get {
+                return ResourceManager.GetString("AddOperationToWatchMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to Watch.
         /// </summary>
         public static string AddToWatchMenuItem {
