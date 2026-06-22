@@ -734,6 +734,12 @@ namespace Microsoft.ImageWatch.Interface
             fourChannelsIgnoreAlpha_ = value;
         }
 
+        private bool flipColorChannels_ = false;
+        public void SetFlipColorChannels(bool value)
+        {
+            flipColorChannels_ = value;
+        }
+
         private void ApplyColormap(WatchListItemView v)
         {
             if (v == null || image_ == null || image_.IsDisposed)
@@ -769,6 +775,8 @@ namespace Microsoft.ImageWatch.Interface
             v.SetColormapJet(colormapJet_);
 
             v.SetColormapFourChannelsIgnoreAlpha(fourChannelsIgnoreAlpha_);
+
+            v.SetColormapFlipColorChannels(flipColorChannels_);
         }
 
         public void Dispose()

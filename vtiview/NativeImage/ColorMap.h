@@ -743,6 +743,64 @@ public:
 	}
 };
 
+class FirstThreeRGBColorMap : public ColorMap
+{
+public:
+	virtual std::wstring GetName() const
+	{
+		return L"Band 0-2 RGB";
+	}
+
+	virtual bool IsCompatibleWith(const vt::CImgInfo& info) const
+	{
+		return (EL_FORMAT(info.type) == EL_FORMAT_SBYTE ||
+			EL_FORMAT(info.type) == EL_FORMAT_BYTE ||
+			EL_FORMAT(info.type) == EL_FORMAT_SSHORT ||
+			EL_FORMAT(info.type) == EL_FORMAT_SHORT ||
+			EL_FORMAT(info.type) == EL_FORMAT_HALF_FLOAT ||
+			EL_FORMAT(info.type) == EL_FORMAT_FLOAT ||
+			EL_FORMAT(info.type) == EL_FORMAT_INT ||
+			EL_FORMAT(info.type) == EL_FORMAT_DOUBLE);
+	}
+
+	virtual double GetDomainStart(int elementFormat) const
+	{
+		return GetDefaultDomainStart(elementFormat);
+	}
+
+	virtual double GetDomainEnd(int elementFormat) const
+	{
+		return GetDefaultDomainEnd(elementFormat);
+	}
+
+	virtual HRESULT Map(const vt::CImg& src, vt::CRGBAByteImg& dst) const
+	{
+		vt::Byte fill[4] = { 0, 0, 0, 255 };
+		vt::BandIndexType bands[4] = { vt::BandIndex0, vt::BandIndexFill, 
+			vt::BandIndexFill, vt::BandIndexFill };
+
+		if (src.Bands() > 1)
+		{
+			bands[0] = vt::BandIndex1;
+			bands[1] = vt::BandIndex0;
+		}
+
+		if (src.Bands() > 2)
+		{
+			bands[0] = vt::BandIndex2;
+			bands[1] = vt::BandIndex1;
+			bands[2] = vt::BandIndex0;
+		}
+
+		return vt::VtConvertBands(dst, src, 4, bands, fill);
+	}
+
+	virtual bool UsesAlpha(const vt::CImgInfo&) const
+	{
+		return false;
+	}
+};
+
 class RedGreenColorMap : public ColorMap
 {
 public:
@@ -1020,6 +1078,7 @@ private:
 	DefaultColorMap defaultColorMap_;
 	NullColorMap nullColorMap_;
 	FirstThreeBGRColorMap firstThreeBGRColorMap_;
+	FirstThreeRGBColorMap firstThreeRGBColorMap_;
 	RedGreenColorMap redGreenColorMap_;
 	UVColorMap uvColorMap_;
 	FlowColorMap flowColorMap_;
@@ -1037,6 +1096,7 @@ public:
 		maps_.push_back(&defaultColorMap_);
 		maps_.push_back(&redGreenColorMap_);
 		maps_.push_back(&firstThreeBGRColorMap_);
+		maps_.push_back(&firstThreeRGBColorMap_);
 		maps_.push_back(&flowColorMap_);
 		maps_.push_back(&uvColorMap_);
 		maps_.push_back(&yuvColorMap_);

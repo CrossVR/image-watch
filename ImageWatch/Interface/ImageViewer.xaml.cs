@@ -260,6 +260,8 @@ namespace Microsoft.ImageWatch.Interface
                 MyToolWindow.TheController.ColormapJet;
             alphaColorCheck.IsChecked =
                 MyToolWindow.TheController.FourChannelIgnoreAlpha;
+            flipColorCheck.IsChecked =
+                MyToolWindow.TheController.FlipColorChannels;
         }
 
         private void ContextMenu_Closing(object sender, RoutedEventArgs e)
@@ -302,10 +304,22 @@ namespace Microsoft.ImageWatch.Interface
             MyToolWindow.TheController.FourChannelIgnoreAlpha = true;
         }
 
+        private void ContextMenu_FlipColorChannelsChecked(object sender,
+            RoutedEventArgs e)
+        {
+            MyToolWindow.TheController.FlipColorChannels = true;
+        }
+
         private void ContextMenu_FourChannelIgnoreAlphaUnchecked(object sender,
             RoutedEventArgs e)
         {
             MyToolWindow.TheController.FourChannelIgnoreAlpha = false;
+        }
+
+        private void ContextMenu_FlipColorChannelsUnchecked(object sender,
+            RoutedEventArgs e)
+        {
+            MyToolWindow.TheController.FlipColorChannels = false;
         }
 
         private void viewImage_MouseWheel(object sender, 

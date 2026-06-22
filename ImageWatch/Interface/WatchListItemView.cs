@@ -353,6 +353,12 @@ namespace Microsoft.ImageWatch.Interface
             fourChannelsIgnoreAlpha_ = value;
         }
 
+        bool flipColorChannels_ = false;
+        public void SetColormapFlipColorChannels(bool value)
+        {
+            flipColorChannels_ = value;
+        }
+
         private void RenderIfDirty()
         {
             if (view_ != null)
@@ -366,7 +372,19 @@ namespace Microsoft.ImageWatch.Interface
                     else if (fourChannelsIgnoreAlpha_ && 
                         image_.PixelFormat.NumBands == 4)
                     {
-                        view_.ColorMapName = "Band 0-2 BGR";
+                        view_.ColorMapName = flipColorChannels_ ? "Band 0-2 RGB" : "Band 0-2 BGR";
+                    }
+                    else if (flipColorChannels_ &&
+                        image_.PixelFormat.NumBands == 3)
+                    {
+                        view_.ColorMapName = image_.GetInfo().PixelFormat == "RGB" ?
+                            "VisionTools Default" : "RGB Flipped";
+                    }
+                    else if (flipColorChannels_ &&
+                        image_.PixelFormat.NumBands == 4)
+                    {
+                        view_.ColorMapName = image_.GetInfo().PixelFormat == "RGBA" ?
+                            "VisionTools Default" : "RGBA Flipped";
                     }
                     else
                     {

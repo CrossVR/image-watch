@@ -215,6 +215,7 @@ namespace Microsoft.ImageWatch.Interface
             item.SetAutoScaleColormap(AutoScaleColormap);
             item.SetColormapJet(ColormapJet);
             item.SetFourChannelsIgnoreAlpha(FourChannelIgnoreAlpha);
+            item.SetFlipColorChannels(FlipColorChannels);
 
             return item;
         }
@@ -376,6 +377,25 @@ namespace Microsoft.ImageWatch.Interface
                 {
                     foreach (var item in LocalsList.Concat(WatchList))
                         item.SetFourChannelsIgnoreAlpha(value);
+
+                    RefreshActiveList();
+                }
+            }
+        }
+
+        private bool flipColorChannels_ = false;
+        public bool FlipColorChannels
+        {
+            get
+            {
+                return flipColorChannels_;
+            }
+            set
+            {
+                if (SetProperty(ref flipColorChannels_, value))
+                {
+                    foreach (var item in LocalsList.Concat(WatchList))
+                        item.SetFlipColorChannels(value);
 
                     RefreshActiveList();
                 }

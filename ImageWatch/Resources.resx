@@ -135,6 +135,9 @@
   <data name="ContextMenuColormapJetText" xml:space="preserve">
     <value>1-Channel Pseudo Color</value>
   </data>
+  <data name="ContextMenuFlipColorChannelsText" xml:space="preserve">
+    <value>Flip Color Channels</value>
+  </data>
   <data name="ContextMenuFourChannelIgnoreAlphaText" xml:space="preserve">
     <value>4-Channel Ignore Alpha</value>
   </data>

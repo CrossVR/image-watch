@@ -102,6 +102,7 @@
                           IsEnabled="True"/>
                 <Separator/>
                 <MenuItem Name="maximizeContrastCheck" Header="{x:Static resx:Resources.ContextMenuAutoMaximizeText}" IsCheckable="True" Checked="ContextMenu_AutoMaximizeChecked" Unchecked="ContextMenu_AutoMaximizeUnchecked"/>
+                <MenuItem Name="flipColorCheck" Header="{x:Static resx:Resources.ContextMenuFlipColorChannelsText}" IsCheckable="True" Checked="ContextMenu_FlipColorChannelsChecked" Unchecked="ContextMenu_FlipColorChannelsUnchecked"/>
                 <MenuItem Name="pseudoColorCheck" Header="{x:Static resx:Resources.ContextMenuColormapJetText}" IsCheckable="True" Checked="ContextMenu_ColormapJetChecked" Unchecked="ContextMenu_ColormapJetUnchecked"/>
                 <MenuItem Name="alphaColorCheck" Header="{x:Static resx:Resources.ContextMenuFourChannelIgnoreAlphaText}" IsCheckable="True" Checked="ContextMenu_FourChannelIgnoreAlphaChecked" Unchecked="ContextMenu_FourChannelIgnoreAlphaUnchecked"/>
                 <Separator/>

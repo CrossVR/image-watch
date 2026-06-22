@@ -234,6 +234,7 @@
                         Mode=TwoWay}" Click="ContextMenu_LargeThumbnailsClick"/>
                     <Separator/>
                     <MenuItem Header="{x:Static resx:Resources.ContextMenuAutoMaximizeText}" IsCheckable="True" IsChecked="{Binding Path=DataContext.AutoScaleColormap}"/>
+                    <MenuItem Header="{x:Static resx:Resources.ContextMenuFlipColorChannelsText}" IsCheckable="True" IsChecked="{Binding Path=DataContext.FlipColorChannels}"/>
                     <MenuItem Header="{x:Static resx:Resources.ContextMenuColormapJetText}" IsCheckable="True" IsChecked="{Binding Path=DataContext.ColormapJet}"/>
                     <MenuItem Header="{x:Static resx:Resources.ContextMenuFourChannelIgnoreAlphaText}" IsCheckable="True" IsChecked="{Binding Path=DataContext.FourChannelIgnoreAlpha}"/>
                     <Separator/>
