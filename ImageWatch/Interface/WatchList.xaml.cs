@@ -1,5 +1,7 @@
-﻿using System;
+﻿using EnvDTE;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -568,22 +570,48 @@ namespace Microsoft.ImageWatch.Interface
             {
                 WatchedImageTypeMap.NamedType type = (WatchedImageTypeMap.NamedType)operation.DataContext;
                 WatchedImageOperator op = Activator.CreateInstance(type.Type) as WatchedImageOperator;
-                if (op != null)
+                if (type.Type == typeof(WatchedImagePtrOp))
+                {
+                    // special case for mem operator
+                    WatchedImageInfo info = SelectedItem.Image.GetInfo();
+                    if (info != null)
+                        controller.AddToWatchList(
+                            $"@mem(0x{info.PixelAddress.ToString("X")}, {info.ElementFormat}, {info.NumBands}, {info.Width}, {info.Height}, {info.NumStrideBytes})");
+                }
+                else if (type.Type == typeof(WatchedImageFileOp))
+                {
+                    // special case for file operator
+                    string path = ImageFileWriter.SaveFileDialog(SelectedItem.Image);
+                    if (path != null)
+                        controller.AddToWatchList($"@file(\"{path}\")");
+                }
+                else if (op != null)
                 {
                     var image = listBox.SelectedItems.Cast<WatchListItem>().GetEnumerator();
                     string expression = SelectedItem.Expression;
-                    var args = op.GetArgumentTypes().Select(arg => {
-                        if (arg == typeof(WatchedImage))
+                    List<string> args = new List<string>();
+                    foreach (var argType in op.GetArgumentTypes())
+                    {
+                        if (argType == typeof(WatchedImage))
                         {
                             if (image.MoveNext())
                                 expression = image.Current.Expression;
-                            return expression;
+                            args.Add(expression);
                         }
                         else
                         {
-                            return Activator.CreateInstance(arg)?.ToString();
+                            try
+                            {
+                                object arg = Activator.CreateInstance(argType);
+                                if (arg != null)
+                                    args.Add(arg.ToString());
+                            }
+                            catch
+                            {
+                                continue;
+                            }
                         }
-                    });
+                    }
                     controller.AddToWatchList($"@{type.Name}({string.Join(", ", args)})");
                 }
             }

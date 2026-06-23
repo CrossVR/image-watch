@@ -67,10 +67,10 @@ namespace Microsoft.ImageWatch.Interface
         }
 
         static string lastExtension_ = "";
-        public static void SaveFileDialog(NativeImageBase image)
+        public static string SaveFileDialog(NativeImageBase image)
         {
             if (image == null || image.IsDisposed)
-                return;
+                return null;
 
             Microsoft.Win32.SaveFileDialog dlg =
                 new Microsoft.Win32.SaveFileDialog();
@@ -111,14 +111,16 @@ namespace Microsoft.ImageWatch.Interface
                         NativeImageHelpers.SaveAsJXR(image, fname);
                     else
                         NativeImageHelpers.SaveAs24BitRGB(image, fname);
+                    return fname;
                 }
                 catch (ApplicationException e)
                 {
                     MessageBox.Show(string.Format("Error saving {0}\n\n{1}", 
                         fname, e.Message), "Error");
-                    return;
+                    return null;
                 }
             }
+            return null;
         }
     }
 }
