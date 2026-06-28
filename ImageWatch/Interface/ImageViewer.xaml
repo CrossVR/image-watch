@@ -15,9 +15,8 @@
         <my:AndConverter x:Key="AndConverter"/>
         <DataTemplate x:Key="itemTemplate">
             <StackPanel Name="Expression">
-                <TextBlock x:Name="channelText" Text="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, 
-                    Path=(ItemsControl.AlternationIndex),
-                    StringFormat=Channel {0}}"
+                <TextBlock x:Name="channelText" Text="{Binding ColormapSelectedBand,
+                    StringFormat={x:Static resx:Resources.ChannelText}}"
                     Foreground="{DynamicResource VsBrush.WindowText}"/>
                 <Image Canvas.Left="0" Canvas.Top="0" 
                     Width="{Binding Path=Width, Converter={StaticResource IntToDoubleConverter}}" 
@@ -28,8 +27,7 @@
                     Focusable="False"/>
             </StackPanel>
             <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, 
-                    Path=(ItemsControl.AlternationIndex)}" Value="0">
+                <DataTrigger Binding="{Binding ColormapSelectedBand}" Value="-1">
                     <Setter TargetName="channelText"
                     Property="Text"
                     Value="{x:Static resx:Resources.AllChannelsText}"/>
@@ -112,7 +110,7 @@
                  Visibility="{Binding Channels.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=2}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.CanContentScroll="False"
-                 BorderThickness="0" AlternationCount="999"
+                 BorderThickness="0"
                  SelectedValuePath="ColormapSelectedBand"
                  SelectedValue="{Binding SelectedChannel, Mode=TwoWay}"
                  Background="{DynamicResource VsBrush.Window}"/>

@@ -211,7 +211,7 @@
     <value>Add Expression to Watch</value>
   </data>
   <data name="ChannelText" xml:space="preserve">
-    <value>Channel</value>
+    <value>Channel {0}</value>
   </data>
   <data name="AllChannelsText" xml:space="preserve">
     <value>All Channels</value>

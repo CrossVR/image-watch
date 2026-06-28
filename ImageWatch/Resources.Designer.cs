@@ -106,7 +106,7 @@ namespace Microsoft.ImageWatch {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel.
+        ///   Looks up a localized string similar to Channel {0}.
         /// </summary>
         public static string ChannelText {
             get {
