@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -129,6 +131,9 @@ namespace Microsoft.ImageWatch.Interface
                 {
                     if (thumb_ != null)
                         thumb_.MarkAsDirty();
+                    if (channels_ != null)
+                        foreach (WatchListItemView c in channels_)
+                            c.MarkAsDirty();
                     if (view_ != null)
                         view_.MarkAsDirty();
 
@@ -463,6 +468,7 @@ namespace Microsoft.ImageWatch.Interface
                 thumb_.NearScale = Math.Max(thumbnailWidth_, thumbnailHeight_);
                 thumb_.SetImage(image_);
                 thumb_.SetDefaultTransform();
+                thumb_.RenderIfDirty();
 
                 ApplyColormap(thumb_);
 
@@ -549,6 +555,14 @@ namespace Microsoft.ImageWatch.Interface
                 thumb_.Initialize(thumbnailWidth_, thumbnailHeight_,
                     bitmapBackground_, false);
             }
+            if (channels_ != null)
+            {
+                foreach (WatchListItemView c in channels_)
+                {
+                    c.Initialize(thumbnailWidth_, thumbnailHeight_,
+                        bitmapBackground_, false);
+                }
+            }
         }
 
         public InteropBitmap View
@@ -572,7 +586,7 @@ namespace Microsoft.ImageWatch.Interface
 
                 ApplyColormap(view_);
 
-                view_.SetColormapSelectedBand(selectedChannel_);
+                view_.ColormapSelectedBand = selectedChannel_;
 
                 return view_.Bitmap;
             }
@@ -751,23 +765,57 @@ namespace Microsoft.ImageWatch.Interface
             }
             set
             {
-                if (SetProperty(ref selectedChannel_, value))
-                    NotifyAllPropertiesChanged();
+                SetProperty(ref selectedChannel_, value);
+                if (view_ != null)
+                    view_.ColormapSelectedBand = value;
             }
         }
 
-        public IEnumerable<int> ValidChannels
+
+
+        private ObservableCollection<WatchListItemView> channels_ = null;
+        public ObservableCollection<WatchListItemView> Channels
         {
             get
             {
-                UpdateIfNecessary(1);
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("getting Channels '" +
+                    Expression + "'");
+#endif
 
-                if (image_ == null || !image_.HasValidInfo())
-                    return Enumerable.Empty<int>();
+                UpdateIfNecessary(2);
+
+                if (image_ == null || !image_.HasPixelsLoaded())
+                    return null;
 
                 var info = image_.GetInfo();
 
-                return Enumerable.Range(-1, (int)info.NumBands + 1);
+                if (channels_ == null || channels_.Count != info.NumBands + 1)
+                {
+                    DebugLogAction("create channel views");
+                    channels_ = new ObservableCollection<WatchListItemView>();
+
+                    for (int c = -1; c < info.NumBands; c++)
+                    {
+                        WatchListItemView view = new WatchListItemView();
+                        view.ColormapSelectedBand = c;
+                        channels_.Add(view);
+                    }
+                }
+
+                foreach(WatchListItemView c in channels_)
+                {
+                    c.Initialize(thumbnailWidth_, thumbnailHeight_,
+                        bitmapBackground_, false);
+                    c.NearScale = Math.Max(thumbnailWidth_, thumbnailHeight_);
+                    c.SetImage(image_);
+                    c.SetDefaultTransform();
+                    c.RenderIfDirty();
+
+                    ApplyColormap(c);
+                };
+
+                return channels_;
             }
         }
 
@@ -803,11 +851,11 @@ namespace Microsoft.ImageWatch.Interface
                 v.SetDefaultColormapDomain();
             }
 
-            v.SetColormapJet(colormapJet_);
+            v.ColormapJet = colormapJet_;
 
-            v.SetColormapFourChannelsIgnoreAlpha(fourChannelsIgnoreAlpha_);
+            v.ColormapFourChannelsIgnoreAlpha = fourChannelsIgnoreAlpha_;
 
-            v.SetColormapFlipColorChannels(flipColorChannels_);
+            v.ColormapFlipColorChannels = flipColorChannels_;
         }
 
         public void Dispose()
@@ -825,6 +873,12 @@ namespace Microsoft.ImageWatch.Interface
                 {
                     thumb_.Dispose();
                     thumb_ = null;
+                }
+                if (channels_ != null)
+                {
+                    foreach (WatchListItemView c in channels_)
+                        c.Dispose();
+                    channels_.Clear();
                 }
                 if (image_ != null)
                 {

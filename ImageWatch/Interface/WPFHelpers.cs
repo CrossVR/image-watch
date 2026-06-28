@@ -209,6 +209,26 @@ namespace Microsoft.ImageWatch.Interface
             throw new NotImplementedException();
         }
     }
+
+    public class IntToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            int count = (int)value;
+            int threshold = int.Parse(parameter.ToString());
+
+            return count <= threshold
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType,
+            object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     
     public class AndConverter : IMultiValueConverter
     {

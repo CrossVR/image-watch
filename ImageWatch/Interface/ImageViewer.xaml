@@ -9,15 +9,30 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Focusable="False">
     <UserControl.Resources>
+        <my:IntToDoubleConverter x:Key="IntToDoubleConverter"/>
         <my:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+        <my:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
         <my:AndConverter x:Key="AndConverter"/>
         <DataTemplate x:Key="itemTemplate">
-            <TextBlock x:Name="channelText" Text="{Binding StringFormat=Channel {0}}" Foreground="{DynamicResource VsBrush.WindowText}" />
+            <StackPanel Name="Expression">
+                <TextBlock x:Name="channelText" Text="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, 
+                    Path=(ItemsControl.AlternationIndex),
+                    StringFormat=Channel {0}}"
+                    Foreground="{DynamicResource VsBrush.WindowText}"/>
+                <Image Canvas.Left="0" Canvas.Top="0" 
+                    Width="{Binding Path=Width, Converter={StaticResource IntToDoubleConverter}}" 
+                    Height="{Binding Path=Height, Converter={StaticResource IntToDoubleConverter}}" 
+                    Stretch="Uniform" 
+                    Source="{Binding Path=Bitmap, Mode=OneWay}" 
+                    SnapsToDevicePixels="True"
+                    Focusable="False"/>
+            </StackPanel>
             <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding}" Value="-1">
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, 
+                    Path=(ItemsControl.AlternationIndex)}" Value="0">
                     <Setter TargetName="channelText"
                     Property="Text"
-                    Value="All Channels"/>
+                    Value="{x:Static resx:Resources.AllChannelsText}"/>
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -93,11 +108,13 @@
                    Foreground="Gray" />
         <ListBox Grid.Row="1" Grid.Column="1" Name="bandsListControl"
                  ItemTemplate="{StaticResource itemTemplate}" Focusable="False"
-                 ItemsSource="{Binding ValidChannels}"
+                 ItemsSource="{Binding Channels}"
+                 Visibility="{Binding Channels.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=2}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.CanContentScroll="False"
-                 BorderThickness="0"
-                 SelectionChanged="bandsListControl_SelectionChanged"
+                 BorderThickness="0" AlternationCount="999"
+                 SelectedValuePath="ColormapSelectedBand"
+                 SelectedValue="{Binding SelectedChannel, Mode=TwoWay}"
                  Background="{DynamicResource VsBrush.Window}"/>
         <Grid.ContextMenu>
             <ContextMenu Name="viewContextMenu">

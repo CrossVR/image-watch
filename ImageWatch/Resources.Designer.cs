@@ -88,11 +88,29 @@ namespace Microsoft.ImageWatch {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Channels.
+        /// </summary>
+        public static string AllChannelsText {
+            get {
+                return ResourceManager.GetString("AllChannelsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not create tool window..
         /// </summary>
         public static string CanNotCreateWindow {
             get {
                 return ResourceManager.GetString("CanNotCreateWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel.
+        /// </summary>
+        public static string ChannelText {
+            get {
+                return ResourceManager.GetString("ChannelText", resourceCulture);
             }
         }
         

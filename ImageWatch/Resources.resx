@@ -210,4 +210,10 @@
   <data name="AddOperationToWatchMenuItem" xml:space="preserve">
     <value>Add Operation to Watch</value>
   </data>
+  <data name="ChannelText" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="AllChannelsText" xml:space="preserve">
+    <value>All Channels</value>
+  </data>
 </root>

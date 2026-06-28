@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +14,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.ComponentModel;
-using System.Globalization;
 
 namespace Microsoft.ImageWatch.Interface
 {
@@ -51,7 +51,6 @@ namespace Microsoft.ImageWatch.Interface
             SetInfoText();
             UpdateStatusBar();
             UpdateValueGrid();
-            UpdateChannels();
         }
 
         private void UpdateValueGrid()
@@ -863,24 +862,6 @@ namespace Microsoft.ImageWatch.Interface
                 statusText.Inlines.Clear();
                 statusText.Inlines.AddRange(MakeStatusBarPixelTextRuns());
             }
-        }
-
-        private void UpdateChannels()
-        {
-            var item = DataContext as WatchListItem;
-            if (item == null)
-                return;
-
-            bandsListControl.SelectedIndex = item.SelectedChannel + 1;
-        }
-
-        void bandsListControl_SelectionChanged(object sender, EventArgs e)
-        {
-            var item = DataContext as WatchListItem;
-            if (item == null)
-                return;
-
-            item.SelectedChannel = bandsListControl.SelectedIndex - 1;
         }
     }
 }

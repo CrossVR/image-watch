@@ -34,8 +34,12 @@ namespace Microsoft.ImageWatch.Interface
         public event EventHandler SizeChanged;
 
         private int width_ = 0;
+        public int Width { get { return width_; } }
         private int height_ = 0;
+        public int Height { get { return height_; } }
         private Color backgroundColor_ = Colors.Black;
+        public Color BackgroundColor { get { return backgroundColor_; } }
+
         public void Initialize(int width, int height, Color backgroundColor,
             bool enableZoomInGrid)
         {
@@ -54,6 +58,7 @@ namespace Microsoft.ImageWatch.Interface
                                 
                 if (SizeChanged != null)
                     SizeChanged(this, EventArgs.Empty);
+                NotifyAllPropertiesChanged();
             }                
         }
 
@@ -342,41 +347,77 @@ namespace Microsoft.ImageWatch.Interface
         }
 
         bool colormapJet_ = false;
-        public void SetColormapJet(bool value)
+        public bool ColormapJet
         {
-            colormapJet_ = value;
+            get
+            {
+                return colormapJet_;
+            }
+            set
+            {
+                if (SetProperty(ref colormapJet_, value))
+                    RenderIfDirty();
+            }
         }
 
         bool fourChannelsIgnoreAlpha_ = false;
-        public void SetColormapFourChannelsIgnoreAlpha(bool value)
+        public bool ColormapFourChannelsIgnoreAlpha
         {
-            fourChannelsIgnoreAlpha_ = value;
+            get
+            {
+                return fourChannelsIgnoreAlpha_;
+            }
+            set
+            {
+                if (SetProperty(ref fourChannelsIgnoreAlpha_, value))
+                    RenderIfDirty();
+            }
         }
 
         bool flipColorChannels_ = false;
-        public void SetColormapFlipColorChannels(bool value)
+        public bool ColormapFlipColorChannels
         {
-            flipColorChannels_ = value;
+            get
+            {
+                return flipColorChannels_;
+            }
+            set
+            {
+                if (SetProperty(ref flipColorChannels_, value))
+                    RenderIfDirty();
+            }
         }
 
         int colorMapSelectedBand_ = -1;
-        public void SetColormapSelectedBand(int value)
+        public int ColormapSelectedBand
         {
-            colorMapSelectedBand_ = value;
+            get
+            {
+                return colorMapSelectedBand_;
+            }
+            set
+            {
+                if (SetProperty(ref colorMapSelectedBand_, value))
+                    RenderIfDirty();
+            }
         }
 
         public void SetDefaultColormapSelectedBand()
         {
-            colorMapSelectedBand_ = -1;
+            ColormapSelectedBand = -1;
         }
 
-        private void RenderIfDirty()
+        public void RenderIfDirty()
         {
             if (view_ != null)
             {                
                 if (image_ != null && !image_.IsDisposed)
                 {
-                    if (colormapJet_ && image_.PixelFormat.NumBands == 1)
+                    if (colorMapSelectedBand_ >= 0)
+                    {
+                        view_.ColorMapName = "VisionTools Default";
+                    }
+                    else if (colormapJet_ && image_.PixelFormat.NumBands == 1)
                     {
                         view_.ColorMapName = "Matlab Jet";
                     }
