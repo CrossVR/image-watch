@@ -246,7 +246,7 @@
                     <MenuItem Header="{x:Static resx:Resources.AddAddressToWatchMenuItem}" Click="ContextMenu_AddAddressToWatchClick"
                               DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
                               IsEnabled="{Binding Path=SelectedItem, Converter={StaticResource ValidNonOperatorSelectedItemToBooleanConverter}}"/>
-                    <MenuItem Header="{x:Static resx:Resources.AddOperationToWatchMenuItem}" Click="ContextMenu_AddOperationClick"
+                    <MenuItem Header="{x:Static resx:Resources.AddExpressionToWatchMenuItem}" Click="ContextMenu_AddOperationClick"
                               DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
                               ItemsSource="{x:Static local:WatchedImageTypeMap.Operators}"
                               IsEnabled="{Binding Path=SelectedItem, Converter={StaticResource ValidSelectedItemToBooleanConverter}}"/>
